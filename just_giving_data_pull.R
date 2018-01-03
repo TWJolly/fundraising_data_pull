@@ -4,11 +4,11 @@ library(jsonlite)
 library(rlist)
 library(XML)
 
-source(my_app_id.R) #sources the file you just created with your app id on JG
-charities_csv <- 'effective_charities.csv' #DR: replace with your list of preferred charities?
+source(my_app_id.R) #sources the file you just created with your app id on JustGiving
+charities_csv <- 'effective_charities.csv' #replace with your list of preferred charities (this script currently only uses charity name and JustGiving ID)
 data_folder <- 'data\\just_giving_data' #folder where the data ends up
 
-#DR: ? Next this copies the data gathered from the api ino your folder(?or defines this so it can be input later)
+#these file paths are defined here used to save the data at the end of this script
 all_donations_file <- paste(data_folder, 'all_donations.csv', sep ='\\') 
 all_fundraisers_file <- paste(data_folder, 'all_fundraisers.csv', sep ='\\')
 current_donations_file <- paste(data_folder, 'current_donations.csv', sep ='\\')
