@@ -93,7 +93,12 @@ donation_data <-
   reduce(bind_rows) %>%
   mutate(date_downloaded = Sys.time())
 
-write_csv(fundraising_page_data, all_fundraisers_file, append = T)
+if(!file.exists(all_fundraisers_file)){
+  write_csv(fundraising_page_data, all_fundraisers_file, append = T)
+}
+if(!file.exists(all_donations_file)){
+  write_csv(donation_data, all_donations_file, append = T)
+}
 write_csv(fundraising_page_data, current_fundraisers_file)
-write_csv(donation_data, all_donations_file, append = T)
 write_csv(donation_data, current_donations_file)
+
