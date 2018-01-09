@@ -27,3 +27,5 @@ You will first need to register a justgiving api here (https://developer.justgiv
 Create a file called my_app_id.R with the following contents (include the slash, do not include the brackets):
 
 my_app_id <- {/your app id}
+
+#You may need to add quotes around this, i.e., my_app_id <- "/id_number"
