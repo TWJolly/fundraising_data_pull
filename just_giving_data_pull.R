@@ -35,6 +35,7 @@ list_to_tibble <- function(named_list, my_recursive = F){
 get_charity_fundraising_pages <- function(charity_name, id){
   charity_search_name <- gsub(' ', '%20', charity_name)
   uri <- paste('/v1/onesearch?q=', charity_search_name, '&i=Fundraiser&limit=9999', sep = '')
+  print(paste('Searching for fundraisers for:', charity_name))
   charity_search_response <- get_data_from_api(uri)
   if(charity_search_response$Total == 0){
     return(NULL)
@@ -48,6 +49,7 @@ get_charity_fundraising_pages <- function(charity_name, id){
 }
 
 get_fundraising_data <- function(fundraiser_id){
+  print(paste('Getting data for fundraiser with id', fundraiser_id))
   paste('/v1/fundraising/pagebyid/',fundraiser_id, sep = '') %>%
     get_data_from_api %>%
     xmlParse %>%
@@ -57,6 +59,7 @@ get_fundraising_data <- function(fundraiser_id){
 }
 
 get_fundraiser_donations <- function(short_page_name){
+  print(paste('Getting donations from fundraiser with short name', short_page_name))
   uri <- paste('/v1/fundraising/pages/', short_page_name, '/donations', sep = '')
   donation_data_response <- get_data_from_api(uri) %>%
     xmlParse %>%
@@ -94,12 +97,12 @@ donation_data <-
   reduce(bind_rows) %>%
   mutate(date_downloaded = Sys.time())
 
-if(!file.exists(all_fundraisers_file)){
+if(file.exists(all_fundraisers_file)){
   write_csv(fundraising_page_data, all_fundraisers_file, append = T)
-}
-if(!file.exists(all_donations_file)){
+} else(write_csv(fundraising_page_data, all_fundraisers_file))
+if(file.exists(all_donations_file)){
   write_csv(donation_data, all_donations_file, append = T)
-}
+} else(write_csv(donation_data, all_donations_file))
 write_csv(fundraising_page_data, current_fundraisers_file)
 write_csv(donation_data, current_donations_file)
 
