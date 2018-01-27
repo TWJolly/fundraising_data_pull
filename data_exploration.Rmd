@@ -1,0 +1,112 @@
+---
+title: "Just giving data exploration"
+author: "Toby J"
+date: "6 January 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+```
+
+## Basic data load
+```{r load packages read data, include = F collapse = T}
+library(tidyverse)
+data_folder <- 'data\\just_giving_data'
+donations <- paste(data_folder, 'current_donations.csv', sep  = '\\') %>% read_csv %>% unique # better duplicate removal! (by fundraiser?)
+fundraisers <- paste(data_folder, 'current_fundraisers.csv', sep  = '\\') %>% read_csv %>% unique
+```
+
+##Data aggregation
+```{r data_summary, echo = TRUE}
+#Distribution of donation counts
+download_date <- max(donations$donationDate)
+aggregated_data <- donations %>%
+  group_by(pageShortName) %>%
+  summarise(total_raised = sum(amount, na.rm = T),
+            donation_count = length(amount),
+            first_donation_date = min(donationDate)) %>%
+  right_join(fundraisers) %>%
+  select(charity, pageShortName, donation_count, total_raised, totalEstimatedGiftAid ,fundraisingTarget, eventDate, expiryDate, totalRaisedOffline, totalRaisedOnline, first_donation_date) %>%
+  replace_na(list(donation_count = 0)) %>%
+  mutate(has_gift_aid = (totalEstimatedGiftAid != 0 & (totalRaisedOffline >0 | totalRaisedOnline >0)),
+         event_in_future = eventDate >= download_date,
+         has_no_donations = (totalRaisedOnline == 0))
+```
+
+##Basic data checks
+```{r data_checks, echo = TRUE}
+#no gift aid rate
+aggregated_data %>%
+  filter((totalRaisedOffline + totalRaisedOnline) >0) %>%
+  group_by(charity) %>%
+  summarise(count = length(has_gift_aid),
+            gift_aid_count = sum(has_gift_aid)) %>%
+  mutate(percentage_gift_aid = gift_aid_count/count)
+  
+#no donations (before the event) rate
+sum(aggregated_data$has_no_donations)/nrow(aggregated_data)
+```
+
+## Expected rate of page creation by charity
+```{r expected rate, echo=FALSE}
+#Can the expiry be before the event?
+
+sum(aggregated_data$eventDate > aggregated_data$expiryDate)
+
+#Yes but it is pretty uncommon
+
+#current data
+#From creating pages myself:
+#London Marathon 2018 fro Animal equality - expiry was 6 month in advance and target was 675 by default
+#THe target is easy to change manually - the exipry date less so (and can be put pre event but not in the past)
+
+expected_rate_table <- aggregated_data %>%
+  mutate(first_donation_to_expiry = as.integer(difftime(expiryDate, first_donation_date, units = "days")),
+         event_to_expiry = as.integer(difftime(expiryDate, eventDate, units = "days")),
+         first_donation_to_event = as.integer(difftime(eventDate, first_donation_date, units = "days")),
+         days_since_event= as.integer(difftime(download_date, eventDate, units = "days")),
+         event_month = format(eventDate, "%m"), 
+         event_year = format(eventDate, "%Y")) %>%
+  mutate(months_expiry_to_event = as.integer((event_to_expiry*7)/30))
+
+#grpup by 3 month period instead?
+
+day_counts <- expected_rate_table %>%
+  group_by(event_month, event_year) %>%
+  summarise(length(event_month))
+
+#Expiry is pretty much always > 3 months (13 weeks after the event (the exceptions are porbably mistakes))
+
+expiry_function <- expected_rate_table %>%
+  filter(days_since_event < 90) %>%
+  group_by(first_donation_to_expiry) %>%
+  summarise(count = length(first_donation_to_expiry)) %>%
+  mutate(cum_count = cumsum(count)) %>%
+  na.omit %>%
+  mutate(cumulitive_proportion = cum_count/max(cum_count)) %>%
+  mutate(weight = 1/(1-cumulitive_proportion)) %>%
+  filter(is.finite(weight))
+
+get_nearest_weight <- Vectorize(function(days){
+  matched_row <- expiry_function %>%
+    filter(first_donation_to_expiry > days) %>%
+    filter(first_donation_to_expiry == min(first_donation_to_expiry))
+  print(matched_row)
+  ifelse(nrow(matched_row) == 1, 
+         return(matched_row$weight),
+         return(max(expiry_function$weight)))
+})
+
+expected_rate_table <- expected_rate_table %>%
+  filter(!is.na(first_donation_to_expiry)) %>%
+  mutate(nearest_weight = get_nearest_weight(first_donation_to_expiry))
+
+#expected rate by min donations
+
+```
+
+#The relationship between early and subsequent donations
+```{r predicting future donations, echo=FALSE}
+
+```
