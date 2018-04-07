@@ -118,10 +118,18 @@ expected_rate_by_charity <- expected_rate_table %>%
 expected_rate_by_charity
 ```
 
-#The relationship between early and subsequent donations
+#Do donations come in in quick succession?
 ```{r predicting future donations, echo=FALSE}
 
-aggregated_data %>% 
-  
+donations_summary <- donations %>%
+  group_by(pageShortName) %>%
+  mutate(first_donation_date = min(donationDate),
+         first_donation_date = max(donationDate)) %>%
+  mutate(time_since_first = as.numeric(difftime(donationDate, first_donation_date, units = "days")),
+         last_donation_to_now) %>%
+  filter(time_since_first != 0)
 
+#Calculate deciles
+percentiles <- seq(0, 1,0.1)
+quantile(donations_summary$time_since_first, percentiles)
 ```
