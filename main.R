@@ -9,6 +9,7 @@ charities_csv <- file.path(data_folder, 'effective_charities.csv') #replace with
 snapshots_folder <- file.path(data_folder, 'just_giving_data_snapshots') #folder where the data ends up
 
 #these file paths are defined here used to save the data at the end of this script
+experiment_start_date <- as.Date('2018/01/01')
 date = Sys.Date()
 time = Sys.time()
 donations_file <- paste('donations', date, '.csv', sep = '')

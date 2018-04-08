@@ -23,11 +23,28 @@ latest_relevant_data <- latest_fundraisers %>%
   left_join(latest_relevant_donations_data)
 
 if(file.exists(all_experimental_pages)){
-  experimental_page_names <- all_experimental_pages %>%
-    read_csv %>%
-    pull(pageShortName)
+  previous_experimental_pages <- all_experimental_pages %>%
+    read_csv
+  experimental_page_names <- pull(previous_experimental_pages, pageShortName)
 } else{experimental_page_names <- c()}
 
-#take latest relevant data and extract new pages 
+randomisation_protocol <- function(first_donation_date){
+    first_donation_second <- lubridate::second(first_donation_date)
+    group <- ifelse(first_donation_second%%2==1,'Treatment', 'Control') #Odd = treatment, Even = control
+    return(group)
+    }
+
+new_pages <- latest_relevant_data %>%
+  filter(!(pageShortName %in% experimental_page_names)) %>%
+  filter(!is.na(first_donation_date)) %>%
+  filter(first_donation_date >=experiment_start_date) %>%
+  mutate(group = randomisation_protocol(first_donation_date),
+         date_identified = date)
+
+if(file.exists(all_experimental_pages)){
+  experimental_pages <-  bind_rows(previous_experimental_pages, new_pages)
+  write_csv(experimental_pages, all_experimental_pages)
+}else(write_csv(new_pages, all_experimental_pages))
+
 
   
