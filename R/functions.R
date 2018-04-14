@@ -1,3 +1,7 @@
+#Here are some awesome functions used by the rest of the code. 
+#They are functional
+
+#This is a generic function that extracts data from the api using uri_end provided
 get_data_from_api <- function(uri_end, 
                                        host = 'api.justgiving.com',
                                        app_id = my_app_id){
@@ -7,6 +11,7 @@ get_data_from_api <- function(uri_end,
   return(data)
 }
 
+#This converts a list to a tibble, it's used by the other functions below
 list_to_tibble <- function(named_list, my_recursive = F){
   named_list %>%
     unlist(recursive = my_recursive) %>%
@@ -15,6 +20,9 @@ list_to_tibble <- function(named_list, my_recursive = F){
     return
 }
 
+#This function creates a table of fundraising pages using a charity name and charity id
+#It uses the just giving search and then checks the just giving id against each of the results
+#This ensures only pages that are for that charity are selected
 get_charity_fundraising_pages <- function(charity_name, id){
   charity_search_name <- gsub(' ', '%20', charity_name)
   uri <- paste('/v1/onesearch?q=', charity_search_name, '&i=Fundraiser&limit=9999', sep = '')
@@ -31,6 +39,7 @@ get_charity_fundraising_pages <- function(charity_name, id){
   return(fundraisers_data)
 }
 
+#This takes a fundraisers id and gets the data for it (a single row of info)
 get_fundraising_data <- function(fundraiser_id){
   print(paste('Getting data for fundraiser with id', fundraiser_id))
   paste('/v1/fundraising/pagebyid/',fundraiser_id, sep = '') %>%
@@ -41,6 +50,7 @@ get_fundraising_data <- function(fundraiser_id){
     return
 }
 
+#This takes a fundraiser short name and extracts all the donation data, retuning them as a tibble
 get_fundraiser_donations <- function(short_page_name){
   print(paste('Getting donations from fundraiser with short name', short_page_name))
   uri <- paste('/v1/fundraising/pages/', short_page_name, '/donations', sep = '')
@@ -55,4 +65,11 @@ get_fundraiser_donations <- function(short_page_name){
     reduce(bind_rows) %>%
     mutate(pageShortName = short_page_name)
   return(results)
+}
+
+#Using the first donation date we randomise pages into treatment and control
+randomisation_protocol <- function(first_donation_date){
+  first_donation_second <- lubridate::second(first_donation_date)
+  group <- ifelse(first_donation_second%%2==1,'Treatment', 'Control') #Odd = treatment, Even = control
+  return(group)
 }
