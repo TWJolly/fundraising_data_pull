@@ -26,7 +26,7 @@ latest_relevant_donations_data <- latest_donations %>%
 
 #Join fundraising data with relevant donations summary
 latest_relevant_data <- latest_fundraisers %>%
-  select(pageShortName, charity, fundraisingTarget, expiryDate) %>%
+  select(pageShortName, charity, fundraisingTarget, expiryDate, eventDate) %>%
   left_join(latest_relevant_donations_data)
 
 #Produces a vecotr of page short names that are already in the experiment (these are filtered out)
@@ -59,7 +59,7 @@ if(file.exists(treatments_file)){
     bind_rows(treatments) %>%
     distinct(pageShortName, .keep_all = T)
 }else(all_treatments <- treatments)
-write_csv(treatments, treatments_file)
+write_csv(all_treatments, treatments_file)
 
 #Updates the experimental pages table
 if(file.exists(all_experimental_pages)){
