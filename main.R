@@ -11,8 +11,6 @@ charities_csv <- file.path(data_folder, 'effective_charities.csv') #replace with
 #A folder that contains all the fundraising and donation data, a new copy each time the code is run
 snapshots_folder <- file.path(data_folder, 'just_giving_data_snapshots')
 
-analyse_results = FALSE #Do we?
-alpha <- 0.05 #For the analysis
 #We don't look at pages with first donation that comes before the experiment_start_date <- as.Date('2018/04/13')
 date = Sys.Date()
 time = Sys.time()
@@ -37,6 +35,3 @@ source("R/functions.R")
 source("R/just_giving_data_pull.R")
 #Performs the randomisation, outputs a file listing all new treatment groups, and saves the current state of experimental pages
 source("R/get_current_state_and_randomise.R")
-#The below, performs the statistical analysis of the donations, comparing treatment with control
-if(analyse_results){
-  source("R/analyse_results.R")}
