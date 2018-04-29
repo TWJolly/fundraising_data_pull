@@ -11,7 +11,8 @@ charities_csv <- file.path(data_folder, 'effective_charities.csv') #replace with
 #A folder that contains all the fundraising and donation data, a new copy each time the code is run
 snapshots_folder <- file.path(data_folder, 'just_giving_data_snapshots')
 
-#We don't look at pages with first donation that comes before the experiment_start_date <- as.Date('2018/04/13')
+#We don't look at pages with first donation that comes before the 
+experiment_start_date <- as.Date('2018/04/13')
 date = Sys.Date()
 time = Sys.time()
 
