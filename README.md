@@ -29,3 +29,6 @@ Create a file called my_app_id.R with the following contents (include the slash,
 my_app_id <- {/your app id}
 
 #You may need to add quotes around this, i.e., my_app_id <- "/id_number"
+
+
+##Next, run Just_giving_data_pull.R
