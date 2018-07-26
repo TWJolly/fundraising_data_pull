@@ -11,12 +11,12 @@ charities_csv <- 'effective_charities_plus.csv' #replace with your list of prefe
 data_folder <- 'data\\just_giving_data_plus' #folder where the data ends up
 
 #these file paths are defined here used to save the data at the end of this script
-all_donations_file <- paste(data_folder, 'all_donations.csv', sep ='\\') 
+all_donations_file <- paste(data_folder, 'all_donations.csv', sep ='\\')
 all_fundraisers_file <- paste(data_folder, 'all_fundraisers.csv', sep ='\\')
 current_donations_file <- paste(data_folder, 'current_donations.csv', sep ='\\')
 current_fundraisers_file <- paste(data_folder, 'current_fundraisers.csv', sep ='\\')
 
-get_data_from_api <- function(uri_end, 
+get_data_from_api <- function(uri_end,
                   host = 'api.justgiving.com',
                   app_id = my_app_id){
   data <- paste('https://', host, app_id, uri_end, sep = '') %>%
@@ -77,17 +77,18 @@ get_fundraiser_donations <- function(short_page_name){
 
 charity_data <- charities_csv %>%
   read_csv %>%
-  drop_na(charity_name, justgiving_id)
+  drop_na(charity_name)
 
 fundraiser_search_data <-
-  map2(charity_data$charity_name, charity_data$justgiving_id, get_charity_fundraising_pages) %>%
+  map2(charity_data$charity_name, charity_data$regno, get_charity_fundraising_pages) %>%
   reduce(bind_rows)
+#DR, 25 Jul 2018: Note I swapped in "regno" for "justgiving_id" because the latter is hard to find in many cases
 
 fundraising_page_data <-
   map(fundraiser_search_data$Id, get_fundraising_data) %>%
   reduce(bind_rows) %>%
   left_join(fundraiser_search_data, by = c('pageId' = 'Id')) %>%
-  filter(searched_charity_id == charity.id) %>%
+  #filter(searched_charity_id == charity.id) %>%
   select(-grep('image.', names(.))) %>%
   select(-grep('videos.', names(.)))%>%
   select(-grep('branding.', names(.))) %>%
