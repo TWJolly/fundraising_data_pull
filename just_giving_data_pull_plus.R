@@ -84,8 +84,11 @@ fundraiser_search_data <-
   reduce(bind_rows)
 #DR, 25 Jul 2018: Note I swapped in "regno" for "justgiving_id" because the latter is hard to find in many cases
 
+fundraiser_search_data_S <-filter(fundraiser_search_data,Id!="11117814",Id!="7002366",Id!="10848759")
+#below op does fine for a limited set of fundraisers, but hangs up on particular fundraisers, e.g., with id 11117814 or 7002366
+
 fundraising_page_data <-
-  map(fundraiser_search_data$Id, get_fundraising_data) %>%
+  map(fundraiser_search_data_S$Id, get_fundraising_data) %>%
   reduce(bind_rows) %>%
   left_join(fundraiser_search_data, by = c('pageId' = 'Id')) %>%
   #filter(searched_charity_id == charity.id) %>%
