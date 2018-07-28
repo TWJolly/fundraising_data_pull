@@ -81,24 +81,38 @@ charity_data <- charities_csv %>%
 
 fundraiser_search_data <-
   map2(charity_data$charity_name, charity_data$regno, get_charity_fundraising_pages) %>%
-  reduce(bind_rows)
+  reduce(bind_rows)  %>%
+  mutate(EventDate=ymd_hms(EventDate,tz="GB")) %>%
+  filter(year(EventDate)>2017)
+  
 #DR, 25 Jul 2018: Note I swapped in "regno" for "justgiving_id" because the latter is hard to find in many cases
 
-fundraiser_search_data_S <-filter(fundraiser_search_data,Id!="11117814",Id!="7002366",Id!="10848759")
-#below op does fine for a limited set of fundraisers, but hangs up on particular fundraisers, e.g., with id 11117814 or 7002366
+#fundraiser_search_data_S <-filter(fundraiser_search_data,Id!="11117814",Id!="7002366",Id!="10848759",Id!="11134769",charity!="Unicef UK")
+#fundraiser_search_data_X <-filter(fundraiser_search_data,Id %in% c("5145793","11117814","7002366","10848759","11134769","6598470","10847131"))
+#below op does fine for a limited set of fundraisers, but hangs up on particular fundraisers, e.g., with id 11117814 or 7002366 or 5145793
+#The error message is "Error in file.exists(file) : invalid 'file' argument"
 
 fundraising_page_data <-
-  map(fundraiser_search_data_S$Id, get_fundraising_data) %>%
+  map(fundraiser_search_data$Id, get_fundraising_data) %>%
   reduce(bind_rows) %>%
-  left_join(fundraiser_search_data, by = c('pageId' = 'Id')) %>%
+  left_join(fundraiser_search_data, by = c('pageId' = 'Id'))   %>%
   #filter(searched_charity_id == charity.id) %>%
+  filter(charity.name == charity) %>%
   select(-grep('image.', names(.))) %>%
   select(-grep('videos.', names(.)))%>%
   select(-grep('branding.', names(.))) %>%
-  mutate(date_downloaded = Sys.time())
+  mutate(date_downloaded = Sys.time()) 
+
+
+fundraising_page_data_notrek <- fundraising_page_data %>%
+  filter(eventId!="4447644") %>%
+  filter(charity.name == charity) %>%
+  filter(!grepl("Felix-Ahatty1",pageShortName))  %>%
+  filter(!grepl("Sanem-Roberts",pageShortName))  %>%
+  arrange(desc(eventDate))
 
 donation_data <-
-  map(fundraising_page_data$pageShortName, get_fundraiser_donations) %>%
+  map(fundraising_page_data_notrek$pageShortName, get_fundraiser_donations) %>%
   reduce(bind_rows) %>%
   mutate(date_downloaded = Sys.time())
 
@@ -110,4 +124,9 @@ if(file.exists(all_donations_file)){
 } else(write_csv(donation_data, all_donations_file))
 write_csv(fundraising_page_data, current_fundraisers_file)
 write_csv(donation_data, current_donations_file)
+
+fundraising_page_data_L <- fundraising_page_data %>% 
+  group_by(charity.id) %>% 
+  summarise(c = names(table(charity))[which.max(table(charity))])
+
 
