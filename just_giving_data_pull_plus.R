@@ -4,6 +4,10 @@ library(jsonlite)
 library(rlist)
 library(XML)
 
+library(pacman)
+#knitr,dplyr,tidyverse,labelled,citr,reporttools,magrittr,glue,huxtable,experiment,dataMaid,broom,janitor,here,xRStata,estimatr,xtable
+p_load(dplyr,magrittr,purrr,tidyverse,tidyr,broom,janitor,here,glue,dataMaid,glue,readr, lubridate,summarytools) 
+
 source("my_app_id.R") #sources the file you just created with your app id on JustGiving
 
 charities_csv <- 'effective_charities_plus.csv' #replace with your list of preferred charities (this script currently only uses charity name and JustGiving ID)
@@ -38,9 +42,12 @@ get_charity_fundraising_pages <- function(charity_name, id){
   uri <- paste('/v1/onesearch?q=', charity_search_name, '&i=Fundraiser&limit=9999', sep = '')
   print(paste('Searching for fundraisers for:', charity_name))
   charity_search_response <- get_data_from_api(uri)
-  if(charity_search_response$Total == 0){
+  if(!is.null(charity_search_response$Total)) {
+     if (charity_search_response$Total==0) {
     return(NULL)
-  }
+     }
+  } else {
+    return(NULL)}
   fundraisers_data <- charity_search_response[['GroupedResults']][[1]][['Results']] %>%
     map(list_to_tibble) %>%
     reduce(bind_rows)%>%
