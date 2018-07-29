@@ -91,6 +91,7 @@ fundraiser_search_data <-
 #fundraiser_search_data_X <-filter(fundraiser_search_data,Id %in% c("5145793","11117814","7002366","10848759","11134769","6598470","10847131"))
 #below op does fine for a limited set of fundraisers, but hangs up on particular fundraisers, e.g., with id 11117814 or 7002366 or 5145793
 #The error message is "Error in file.exists(file) : invalid 'file' argument"
+#fixed by looking at only recent EventDate (see above)
 
 fundraising_page_data <-
   map(fundraiser_search_data$Id, get_fundraising_data) %>%
@@ -102,7 +103,6 @@ fundraising_page_data <-
   select(-grep('videos.', names(.)))%>%
   select(-grep('branding.', names(.))) %>%
   mutate(date_downloaded = Sys.time()) 
-
 
 fundraising_page_data_notrek <- fundraising_page_data %>%
   filter(eventId!="4447644") %>%
