@@ -12,6 +12,10 @@ It will take 30 - 60 minutes to download all the data; this appears to be determ
 ## What are the files created?
 2 files are created and 4 are updated each time data is drawn from the API.
 
+It also creates/appends data to  2 all_* files in the present folder that increase in size every time you run the script - this is to capture data changes and to retain data from expired pages (which can't be accessed through the api).
+
+The charities that this script uses (in effective_charities.csv) are all recommended by one or more organisations associated with effective altruism (although in some cases the lists only recommend targeting a particular part of the charity's work):
+
 ###Created:
 A table of currently live (not yet expired) **pages** is created in
 ```
@@ -34,6 +38,10 @@ These files are created as a record of the state of the full sample of pages. Th
 ###Updated:
 **data_pulls.csv** is updated with the date and the file paths of the 2 files created. The most recent files referenced in this table are used to update the other files.
 
+(Note: we also give a broader list in the file effective_charities_plus, including some additional international mega-charities like MSF)
+
+## How do I make it run?
+=======
 **experimental_pages.csv** contains the page data from all of the fundraising pages that have been selected for the experiment (treatment and control).
 
 **donations\_to\_experimental\_pages.csv** (donations_to_experimental_pages.csv) contains all of the donations data for the pages in the experimental_pages.csv file. This will be the main source of data for testing the hypothesis.
@@ -67,4 +75,4 @@ There will need to be periodic data collection due to the fact that pages can ex
 3. By monitoring the rate of new donations, we can pick a stop point when we are confident that we have collected the vast majority of donation to experimental pages.
 4. We will then implement our pre-defined analysis.
 
-
+#You may need to add quotes around this, i.e., my_app_id <- "/id_number"
