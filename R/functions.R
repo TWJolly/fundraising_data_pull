@@ -42,21 +42,27 @@ get_charity_fundraising_pages <- function(charity_name, id){
 #This takes a fundraisers id and gets the data for it (a single row of info)
 get_fundraising_data <- function(fundraiser_id){
   print(paste('Getting data for fundraiser with id', fundraiser_id))
-  paste('/v1/fundraising/pagebyid/',fundraiser_id, sep = '') %>%
+  fundraiser <- try(paste('/v1/fundraising/pagebyid/',fundraiser_id, sep = '') %>%
     get_data_from_api %>%
     xmlParse %>%
     xmlToList %>%
-    list_to_tibble(my_recursive = T) %>%
-    return
+    list_to_tibble(my_recursive = T))
+    if(class(fundraiser) == "try-error"){
+    return(NULL)
+  }
+    return(fundraiser)
 }
 
 #This takes a fundraiser short name and extracts all the donation data, retuning them as a tibble
 get_fundraiser_donations <- function(short_page_name){
   print(paste('Getting donations from fundraiser with short name', short_page_name))
   uri <- paste('/v1/fundraising/pages/', short_page_name, '/donations', sep = '')
-  donation_data_response <- get_data_from_api(uri) %>%
+  donation_data_response <- try(get_data_from_api(uri) %>%
     xmlParse %>%
-    xmlToList
+    xmlToList)
+  if(class(donation_data_response) == "try-error"){
+    return(NULL)
+  }
   if(is.null(donation_data_response[['donations']])){
     return(NULL)
   }
