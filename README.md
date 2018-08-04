@@ -1,6 +1,16 @@
 # Charity seeding experiment code and process
 
 ## How do I make the code run?
+
+DR: First you need to register and create an app id on JustGiving, and save this as in a file you call  
+a file "my_app_id.R", containing a single line of text  
+```
+my_app_id <- "/[ID]"
+```
+replacing "[ID]" with your ID, without the brackets.
+
+Next...
+
 Install the packages at the top of main.R.
 Open
 ```
