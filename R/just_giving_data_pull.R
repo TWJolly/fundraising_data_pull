@@ -11,7 +11,7 @@ fundraiser_search_data <-
   map2(charity_data$charity_name, charity_data$justgiving_id, get_charity_fundraising_pages) %>%
   reduce(bind_rows)
 
-#Get info about the funraisers
+#Get info about the fundraisers
 fundraising_page_data <-
   map(fundraiser_search_data$Id, get_fundraising_data) %>%
   reduce(bind_rows) %>%
