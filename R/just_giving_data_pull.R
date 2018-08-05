@@ -12,14 +12,14 @@ fundraiser_search_data <-
   reduce(bind_rows)
 
 #Sample of 50 for testing... fundraiser_search_data <- tail(fundraiser_search_data,n=50)
+#sample wateraid: fundraiser_search_data_w<- filter(fundraiser_search_data,charity=="WaterAid") 
   
 #Get info about the fundraisers
 fundraising_page_data <-
   map(fundraiser_search_data$Id, get_fundraising_data) %>%
   reduce(bind_rows) %>%
   left_join(fundraiser_search_data, by = c('pageId' = 'Id')) %>%
-  filter(searched_charity_id == charity.registrationNumber) %>% #match the 'regno' 
-#This seems to filter out too much; e.g., it gets rid of all WaterAid entries; need to check
+  dplyr::filter(unlist(Map(function(x, y) grepl(x, y), searched_charity_id, charity.registrationNumber))) #match the 'regno' ... if it is *present* in the other variable (some give several regno's) 
   select(-grep('image.', names(.))) %>%
   select(-grep('videos.', names(.)))%>%
   select(-grep('branding.', names(.))) %>%
