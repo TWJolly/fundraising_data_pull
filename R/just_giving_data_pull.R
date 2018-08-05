@@ -13,6 +13,8 @@ fundraiser_search_data <-
 
 #Sample of 50 for testing... fundraiser_search_data <- tail(fundraiser_search_data,n=50)
 #sample wateraid: fundraiser_search_data_w<- filter(fundraiser_search_data,charity=="WaterAid") 
+#fundraiser_search_data_a<-filter(fundraiser_search_data,charity=="Animal Equality") 
+#Note -- I did a check on these smaller charities -- the filtering below seems to be correct  
   
 #Get info about the fundraisers
 fundraising_page_data <-
