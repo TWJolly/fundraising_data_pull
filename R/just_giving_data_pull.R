@@ -4,19 +4,21 @@
 #Get table of target charities
 charity_data <- charities_csv %>%
   read_csv %>%
-  drop_na(charity_name, justgiving_id)
+  drop_na(charity_name, regno)
 
-#Get all fundraisers for target charities
+#Get all fundraisers for target charities (just basic information)
 fundraiser_search_data <-
-  map2(charity_data$charity_name, charity_data$justgiving_id, get_charity_fundraising_pages) %>%
+  map2(charity_data$charity_name, charity_data$regno, get_charity_fundraising_pages) %>%
   reduce(bind_rows)
 
+#Sample of 50 for testing... fundraiser_search_data <- tail(fundraiser_search_data,n=50)
+  
 #Get info about the fundraisers
 fundraising_page_data <-
   map(fundraiser_search_data$Id, get_fundraising_data) %>%
   reduce(bind_rows) %>%
   left_join(fundraiser_search_data, by = c('pageId' = 'Id')) %>%
-  filter(searched_charity_id == charity.id) %>%
+  filter(searched_charity_id == charity.registrationNumber) %>% #match the 'regno' 
   select(-grep('image.', names(.))) %>%
   select(-grep('videos.', names(.)))%>%
   select(-grep('branding.', names(.))) %>%
