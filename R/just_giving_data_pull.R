@@ -19,6 +19,7 @@ fundraising_page_data <-
   reduce(bind_rows) %>%
   left_join(fundraiser_search_data, by = c('pageId' = 'Id')) %>%
   filter(searched_charity_id == charity.registrationNumber) %>% #match the 'regno' 
+#This seems to filter out too much; e.g., it gets rid of all WaterAid entries; need to check
   select(-grep('image.', names(.))) %>%
   select(-grep('videos.', names(.)))%>%
   select(-grep('branding.', names(.))) %>%
@@ -50,3 +51,4 @@ if(file.exists(table_of_data_pulls)){
   data_pulls <- bind_rows(data_pulls, this_data_pull) 
 } else(data_pulls <- this_data_pull)
 write_csv(data_pulls, table_of_data_pulls)
+
