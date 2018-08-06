@@ -1,6 +1,16 @@
 # Charity seeding experiment code and process
 
 ## How do I make the code run?
+
+DR: First you need to register and create an app id on JustGiving, and save this as in a file you call  
+a file "my_app_id.R", containing a single line of text  
+```
+my_app_id <- "/[ID]"
+```
+replacing "[ID]" with your ID, without the brackets.
+
+Next...
+
 Install the packages at the top of main.R.
 Open
 ```
@@ -68,7 +78,7 @@ These files are created as a record of the state of the full sample of pages. Th
 
 The active part of the experiment will be over once we have depleted the pre-defined pot of money (and therefore also have a treatment group of approximately the pre-defined size).
 
-*[DR: We might try to plan this to run until we achieve a sufficient statistical power to detect a minimum-size effect*
+*[DR: We might try to plan this to run until we achieve a sufficient statistical power to detect a minimum-size effect]*
 
 ####After the donation part of the experiment
 

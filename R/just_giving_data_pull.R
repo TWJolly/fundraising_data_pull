@@ -4,19 +4,24 @@
 #Get table of target charities
 charity_data <- charities_csv %>%
   read_csv %>%
-  drop_na(charity_name, justgiving_id)
+  drop_na(charity_name, regno)
 
-#Get all fundraisers for target charities
+#Get all fundraisers for target charities (just basic information)
 fundraiser_search_data <-
-  map2(charity_data$charity_name, charity_data$justgiving_id, get_charity_fundraising_pages) %>%
+  map2(charity_data$charity_name, charity_data$regno, get_charity_fundraising_pages) %>%
   reduce(bind_rows)
 
+#Sample of 50 for testing... fundraiser_search_data <- tail(fundraiser_search_data,n=50)
+#sample wateraid: fundraiser_search_data_w<- filter(fundraiser_search_data,charity=="WaterAid") 
+#fundraiser_search_data_a<-filter(fundraiser_search_data,charity=="Animal Equality") 
+#Note -- I did a check on these smaller charities -- the filtering below seems to be correct  
+  
 #Get info about the fundraisers
 fundraising_page_data <-
   map(fundraiser_search_data$Id, get_fundraising_data) %>%
   reduce(bind_rows) %>%
   left_join(fundraiser_search_data, by = c('pageId' = 'Id')) %>%
-  filter(searched_charity_id == charity.id) %>%
+  dplyr::filter(unlist(Map(function(x, y) grepl(x, y), searched_charity_id, charity.registrationNumber))) #match the 'regno' ... if it is *present* in the other variable (some give several regno's) 
   select(-grep('image.', names(.))) %>%
   select(-grep('videos.', names(.)))%>%
   select(-grep('branding.', names(.))) %>%
@@ -48,3 +53,4 @@ if(file.exists(table_of_data_pulls)){
   data_pulls <- bind_rows(data_pulls, this_data_pull) 
 } else(data_pulls <- this_data_pull)
 write_csv(data_pulls, table_of_data_pulls)
+
