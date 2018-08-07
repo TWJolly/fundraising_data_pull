@@ -1,6 +1,6 @@
 library(pacman)
 #knitr,dplyr,tidyverse,labelled,citr,reporttools,magrittr,glue,huxtable,experiment,dataMaid,broom,janitor,here,xRStata,estimatr,xtable
-p_load(dplyr,magrittr,purrr,tidyverse,tidyr,broom,janitor,  tidyverse,httr,jsonlite,rlist,XML)
+p_load(dplyr,magrittr,purrr,tidyverse,tidyr,broom,janitor,  httr,jsonlite,rlist,XML)
 
 #Folder holding all the raw data and files that are created for the process
 data_folder <- 'data'
