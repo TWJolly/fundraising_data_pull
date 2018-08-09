@@ -38,6 +38,7 @@ dir.create(snapshots_folder, showWarnings = FALSE)
 dir.create(donations_folder, showWarnings = FALSE)
 dir.create(fundraisers_folder, showWarnings = FALSE)
 
+#Save date-tagged downloaded fundraising page and donation files to the relevant (snapshots) folder
 write_csv(fundraising_page_data, current_fundraisers_file)
 write_csv(donation_data, current_donations_file)
 #DR: I think we also want these saved as R files for our analysis; csv may lead to loss of data formats (or am I missing something?):

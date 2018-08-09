@@ -20,11 +20,13 @@ using R and run main.R .
 It will take 30 - 60 minutes to download all the data; this appears to be determined by Just Giving API limits.
 
 ## What are the files created?
-2 files are created and 4 are updated each time data is drawn from the API.
+2 files are created (?and 4 are updated) each time data is drawn from the API, and these are stored to the folders mentioned below.
 
-It also creates/appends data to  2 all_* files in the present folder that increase in size every time you run the script - this is to capture data changes and to retain data from expired pages (which can't be accessed through the api).
+Note that we must run this regularly to retain data from expired pages (which can't be accessed through the api).
 
-The charities that this script uses (in effective_charities.csv) are all recommended by one or more organisations associated with effective altruism (although in some cases the lists only recommend targeting a particular part of the charity's work).
+*DR: The above needs clarification. The 'all_' files are no longer being created I think*
+
+The charities that this script uses (in effective_charities.csv) are all recommended by one or more organisations associated with effective altruism (although in some cases the lists only recommend targeting a particular part of the charity's work)*.
 
 (Note: we also give a broader list in the file effective_charities_plus, including some additional international mega-charities like MSF.)
 
