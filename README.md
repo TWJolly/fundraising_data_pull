@@ -26,7 +26,7 @@ Note that we must run this regularly to retain data from expired pages (which ca
 
 *DR: The above needs clarification. The 'all_' files are no longer being created I think*
 
-The charities that this script uses (in effective_charities.csv) are all recommended by one or more organisations associated with effective altruism (although in some cases the lists only recommend targeting a particular part of the charity's work)*.
+The charities that this script uses (in effective_charities.csv) are all recommended by one or more organisations associated with effective altruism (although in some cases the lists only recommend targeting a particular part of the charity's work) [and see comment below].
 
 (Note: we also give a broader list in the file effective_charities_plus, including some additional international mega-charities like MSF.)
 
