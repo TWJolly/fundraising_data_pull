@@ -11,6 +11,8 @@ fundraiser_search_data <-
   map2(charity_data$charity_name, charity_data$regno, get_charity_fundraising_pages) %>%
   reduce(bind_rows)
 
+#TEMPL Get all fundraisers for ALL charities (just basic information)
+
 #Sample of 50 for testing... fundraiser_search_data <- tail(fundraiser_search_data,n=50)
 #sample wateraid: fundraiser_search_data_w<- filter(fundraiser_search_data,charity=="WaterAid") 
 #fundraiser_search_data_a<-filter(fundraiser_search_data,charity=="Animal Equality") 
