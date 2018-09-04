@@ -9,7 +9,9 @@ charities <- api_call_results$GroupedResults[[1]]$Results
 
 charity_df <-map(charities, list_to_tibble) %>%
   reduce(bind_rows)%>%
-  mutate(regno = str_extract(Subtext,"([:alpha:]{2})?[:digit:]+"))
+  mutate(regno = str_extract(Subtext,"([:alpha:]{2})?[:digit:]+")) %>%
+           select(Subtext, LinkPath, CountryCode, Id,
+                  Name, Description, Type, regno)
 
 write_csv(charity_df, full_jg_charity_list)
 
@@ -19,5 +21,9 @@ all_jg_fundraiser_search_data <-
   map2(charity_df$Name, charity_df$regno, get_charity_fundraising_pages) %>%
   reduce(bind_rows)
 
-
+last_months_pages <- all_jg_fundraiser_search_data %>%
+  filter(year(CreatedDate) == year(date) &
+         month(CreatedDate) == month(date)-1) %>% #This won't work in January
+  group_by(charity) %>%
+  summarise(count = length(charity))
 
