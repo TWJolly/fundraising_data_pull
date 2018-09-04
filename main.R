@@ -29,6 +29,7 @@ all_experimental_pages <- file.path(data_folder, 'experimental_pages.csv')
 table_of_data_pulls <- file.path(data_folder, 'data_pulls.csv')
 treatments_file <- file.path(data_folder, 'treatments.csv')
 current_experimental_donation_state_path <- file.path(data_folder, 'donations_to_experimental_pages.csv')
+full_jg_charity_list <- file.path(data_folder, 'all_jg_charities.csv')
 
 #This sources the file you just created with your app id on JustGiving
 source("my_app_id.R")
