@@ -43,11 +43,11 @@ dir.create(fundraisers_folder, showWarnings = FALSE)
 #Save date-tagged downloaded fundraising page and donation files to the relevant (snapshots) folder
 write_csv(fundraising_page_data, current_fundraisers_file)
 write_csv(donation_data, current_donations_file)
-#DR: I think we also want these saved as R files for our analysis; csv may lead to loss of data formats (or am I missing something?):
+#DR: Maybe we also want these saved as R files for our analysis; csv may lead to loss of data formats (or am I missing something?):
 write_rds(fundraising_page_data,current_fundraisers_file_rds)
 write_rds(donation_data, current_donations_file_rds)
 
-#The code  below creates a table of data pull events. So that the most recents data is used and we retain a record of our behaviour
+#Create a table of data pull events. (So that the most recent data is used and we retain a record of our behaviour)
 this_data_pull <- data.frame(date, time)
 names(this_data_pull) <- c('date', 'datetime')
 this_data_pull <- this_data_pull %>%
@@ -59,4 +59,13 @@ if(file.exists(table_of_data_pulls)){
   data_pulls <- bind_rows(data_pulls, this_data_pull) 
 } else(data_pulls <- this_data_pull)
 write_csv(data_pulls, table_of_data_pulls)
+
+#If on David's computer, move the files to the relevant folders for analysis 
+
+if (Sys.info()["sysname"] == "Darwin") {
+  print("David's mac")
+  #cp to relevant folder
+} else {
+  print("not David's mac")
+}
 

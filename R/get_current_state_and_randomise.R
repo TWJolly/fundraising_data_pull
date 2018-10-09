@@ -29,7 +29,7 @@ latest_relevant_data <- latest_fundraisers %>%
   select(pageShortName, charity, fundraisingTarget, expiryDate, eventDate) %>%
   left_join(latest_relevant_donations_data)
 
-#Produces a vecotr of page short names that are already in the experiment (these are filtered out)
+#Produces a vector of page short names that are already in the experiment (these are filtered out)
 if(file.exists(all_experimental_pages)){
   previous_experimental_pages <- all_experimental_pages %>%
     read_csv

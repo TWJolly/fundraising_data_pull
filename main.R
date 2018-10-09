@@ -2,6 +2,8 @@ library(pacman)
 #knitr,dplyr,tidyverse,labelled,citr,reporttools,magrittr,glue,huxtable,experiment,dataMaid,broom,janitor,here,xRStata,estimatr,xtable
 p_load(dplyr,magrittr,purrr,tidyverse,tidyr,broom,janitor, here,glue,dataMaid,readr,lubridate,summarytools, httr,jsonlite,rlist,XML)
 
+#other packages I often use: knitr,  citr, reporttools, glue, experiment, estimatr, broom, kableExtra, purrr, ggsignif, recipes, glmnet, glmnetUtils, rsample,snakecase)
+
 #Folder holding all the raw data and files that are created for the process
 data_folder <- 'data'
 #File that lists the target charities with their ids
