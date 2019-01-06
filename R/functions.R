@@ -35,9 +35,11 @@ get_charity_fundraising_pages <- function(charity_name, id){
     map(list_to_tibble) %>%
     reduce(bind_rows)%>%
     mutate(charity = charity_name,
-           searched_charity_id = id)
+           searched_charity_id = id)%>%
+    filter(searched_charity_id==CharityId)
   return(fundraisers_data)
 }
+#DO: filter on id=CharityID  (and use justgiving_id in calling this)
 
 #This takes a fundraisers id and gets the data for it (a single row of info)
 get_fundraising_data <- function(fundraiser_id){

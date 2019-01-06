@@ -2,8 +2,8 @@
 
 ## How do I make the code run?
 
-DR: First you need to register and create an app id on JustGiving, and save this as in a file you call  
-a file "my_app_id.R", containing a single line of text  
+DR: First you need to register and create an app id on JustGiving, and save this as in a file you call
+a file "my_app_id.R", containing a single line of text
 ```
 my_app_id <- "/[ID]"
 ```
@@ -72,7 +72,7 @@ These files are created as a record of the state of the full sample of pages. Th
 	+ This will download all the required data and split new pages (pages that have received at least one donation but are not yet part of the experiment) into treatment and control.
 	+ Treatment and control are determined by the last digit (seconds) of the time of the first donations. Even = Control. Odd = Treatment.
 	- ... [DR: 4 Aug 2018: Update this for our new plan to predict the donation quantile and then alternate Treatment(s) and Control within each quantile.]
-	+ All new pages in the treatment group are added to treatments.csv (with a 0 in the additional\_donated\_amount column) 
+	+ All new pages in the treatment group are added to treatments.csv (with a 0 in the additional\_donated\_amount column)
 2. After the script has finished running open treatments.csv in the data folder
 3. Filter treatments.csv to the pages that have not yet recieved an additional donation
 4. Open each of the links in turn and donate the stated additional donation to that page

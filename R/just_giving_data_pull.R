@@ -4,14 +4,23 @@
 #Get table of target charities
 charity_data <- charities_csv %>%
   read_csv %>%
-  drop_na(charity_name, regno)
+  #drop_na(charity_name, regno) 
+  drop_na(charity_name, justgiving_id) 
+#drop if there IS no  'justgiving_id'
+
+#%>% filter(give_well_top_2017==1 | give_well_standout_2017==1)
 
 #Get all fundraisers for target charities (just basic information)
 fundraiser_search_data <-
-  map2(charity_data$charity_name, charity_data$regno, get_charity_fundraising_pages) %>%
-  reduce(bind_rows)
+  map2(charity_data$charity_name, charity_data$justgiving_id, get_charity_fundraising_pages) %>%
+  reduce(bind_rows) 
 
-#TEMPL Get all fundraisers for ALL charities (just basic information)
+#Note: pull only the where CharityID is one of:       822548    183708   2238024           1927037 181721   13441  181972 179        998971 1869770         181813 253  186165 54697 180
+
+fundraiser_search_data_2018 <- fundraiser_search_data %>%
+  mutate(date_created=date(CreatedDate)) %>%
+  filter(date_created>"2018-01-01")
+  
 
 #Sample of 50 for testing... fundraiser_search_data <- tail(fundraiser_search_data,n=50)
 #sample wateraid: fundraiser_search_data_w<- filter(fundraiser_search_data,charity=="WaterAid") 
@@ -40,14 +49,13 @@ dir.create(snapshots_folder, showWarnings = FALSE)
 dir.create(donations_folder, showWarnings = FALSE)
 dir.create(fundraisers_folder, showWarnings = FALSE)
 
-#Save date-tagged downloaded fundraising page and donation files to the relevant (snapshots) folder
 write_csv(fundraising_page_data, current_fundraisers_file)
 write_csv(donation_data, current_donations_file)
-#DR: Maybe we also want these saved as R files for our analysis; csv may lead to loss of data formats (or am I missing something?):
+#DR: I think we also want these saved as R files for our analysis; csv may lead to loss of data formats (or am I missing something?):
 write_rds(fundraising_page_data,current_fundraisers_file_rds)
-write_rds(donation_data, current_donations_file_rds)
+write_csv(donation_data, current_donations_file_rds)
 
-#Create a table of data pull events. (So that the most recent data is used and we retain a record of our behaviour)
+#The code  below creates a table of data pull events. So that the most recents data is used and we retain a record of our behaviour
 this_data_pull <- data.frame(date, time)
 names(this_data_pull) <- c('date', 'datetime')
 this_data_pull <- this_data_pull %>%
@@ -59,13 +67,4 @@ if(file.exists(table_of_data_pulls)){
   data_pulls <- bind_rows(data_pulls, this_data_pull) 
 } else(data_pulls <- this_data_pull)
 write_csv(data_pulls, table_of_data_pulls)
-
-#If on David's computer, move the files to the relevant folders for analysis 
-
-if (Sys.info()["sysname"] == "Darwin") {
-  print("David's mac")
-  #cp to relevant folder
-} else {
-  print("not David's mac")
-}
 
