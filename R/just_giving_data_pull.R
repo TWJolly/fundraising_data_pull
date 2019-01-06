@@ -4,12 +4,23 @@
 #Get table of target charities
 charity_data <- charities_csv %>%
   read_csv %>%
-  drop_na(charity_name, regno)
+  #drop_na(charity_name, regno) 
+  drop_na(charity_name, justgiving_id) 
+#drop if there IS no  'justgiving_id'
+
+#%>% filter(give_well_top_2017==1 | give_well_standout_2017==1)
 
 #Get all fundraisers for target charities (just basic information)
 fundraiser_search_data <-
-  map2(charity_data$charity_name, charity_data$regno, get_charity_fundraising_pages) %>%
-  reduce(bind_rows)
+  map2(charity_data$charity_name, charity_data$justgiving_id, get_charity_fundraising_pages) %>%
+  reduce(bind_rows) 
+
+#Note: pull only the where CharityID is one of:       822548    183708   2238024           1927037 181721   13441  181972 179        998971 1869770         181813 253  186165 54697 180
+
+fundraiser_search_data_2018 <- fundraiser_search_data %>%
+  mutate(date_created=date(CreatedDate)) %>%
+  filter(date_created>"2018-01-01")
+  
 
 #Sample of 50 for testing... fundraiser_search_data <- tail(fundraiser_search_data,n=50)
 #sample wateraid: fundraiser_search_data_w<- filter(fundraiser_search_data,charity=="WaterAid") 

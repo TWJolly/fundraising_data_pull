@@ -2,6 +2,8 @@ library(pacman)
 #knitr,dplyr,tidyverse,labelled,citr,reporttools,magrittr,glue,huxtable,experiment,dataMaid,broom,janitor,here,xRStata,estimatr,xtable
 p_load(dplyr,magrittr,purrr,tidyverse,tidyr,broom,janitor, here,glue,dataMaid,readr,lubridate,summarytools, httr,jsonlite,rlist,XML)
 
+#other packages I often use: knitr,  citr, reporttools, glue, experiment, estimatr, broom, kableExtra, purrr, ggsignif, recipes, glmnet, glmnetUtils, rsample,snakecase)
+
 #Folder holding all the raw data and files that are created for the process
 data_folder <- 'data'
 #File that lists the target charities with their ids
@@ -9,12 +11,12 @@ charities_csv <- file.path(data_folder, 'effective_charities.csv') #replace with
 #A folder that contains all the fundraising and donation data, a new copy each time the code is run
 snapshots_folder <- file.path(data_folder, 'just_giving_data_snapshots')
 
-#We don't look at pages with first donation that comes before the 
-experiment_start_date <- as.Date('2018/04/13')
+#In the get_current... file, We don't look at pages with first donation that comes before the 
+experiment_start_date <- as.Date('2018/04/13') #REMEMBER to reset this!!
 date = Sys.Date()
 time = Sys.time()
 
-#These file and folder paths are defined here used to save the data at the end of this script
+#File and folder paths are defined here; used to save the data at the end of this script
 donations_file <- paste('donations', date, '.csv', sep = '')
 donations_file_rds <- paste('donations', date, '.rds', sep = '')
 fundraisers_file <- paste('fundraisers', date, '.csv', sep = '')
