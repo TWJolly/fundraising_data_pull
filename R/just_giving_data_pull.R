@@ -5,10 +5,9 @@
 charity_data <- charities_csv %>%
   read_csv %>%
   #drop_na(charity_name, regno) 
-  drop_na(charity_name, justgiving_id) 
-#drop if there IS no  'justgiving_id'
+  drop_na(charity_name, justgiving_id) #drop if there IS no  'justgiving_id'
 
-#%>% filter(give_well_top_2017==1 | give_well_standout_2017==1)
+  #%>% filter(give_well_top_2017==1 | give_well_standout_2017==1)
 
 #Get all fundraisers for target charities (just basic information)
 fundraiser_search_data <-
@@ -19,20 +18,18 @@ fundraiser_search_data <-
 
 fundraiser_search_data_2018 <- fundraiser_search_data %>%
   mutate(date_created=date(CreatedDate)) %>%
-  filter(date_created>"2018-01-01")
+  filter(date_created>"2018-06-01")
   
-
-#Sample of 50 for testing... fundraiser_search_data <- tail(fundraiser_search_data,n=50)
-#sample wateraid: fundraiser_search_data_w<- filter(fundraiser_search_data,charity=="WaterAid") 
-#fundraiser_search_data_a<-filter(fundraiser_search_data,charity=="Animal Equality") 
-#Note -- I did a check on these smaller charities -- the filtering below seems to be correct  
+    #Sample of 10 for testing... fundraiser_search_data_t <- tail(fundraiser_search_data,n=10)
+    #sample wateraid: fundraiser_search_data_w<- filter(fundraiser_search_data,charity=="WaterAid") 
+    #fundraiser_search_data_a<-filter(fundraiser_search_data,charity=="Animal Equality") 
   
 #Get info about the fundraisers
 fundraising_page_data <-
   map(fundraiser_search_data$Id, get_fundraising_data) %>%
   reduce(bind_rows) %>%
   left_join(fundraiser_search_data, by = c('pageId' = 'Id')) %>%
-  dplyr::filter(unlist(Map(function(x, y) grepl(x, y), searched_charity_id, charity.registrationNumber))) %>% #match the 'regno' ... if it is *present* in the other variable (some give several regno's) 
+  #dplyr::filter(unlist(Map(function(x, y) grepl(x, y), searched_charity_id, charity.registrationNumber))) %>% -- removed as already done above ... match the 'regno' ... if it is *present* in the other variable (some give several regno's) 
   select(-grep('image.', names(.))) %>%
   select(-grep('videos.', names(.)))%>%
   select(-grep('branding.', names(.))) %>%
