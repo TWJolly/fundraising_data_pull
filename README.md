@@ -25,6 +25,7 @@ It will take 30 - 60 minutes to download all the data; this appears to be determ
 Note that we must run this regularly to retain data from expired pages (which can't be accessed through the api).
 
 *DR: The above needs clarification. The 'all_' files are no longer being created I think*
+*test minor change*
 
 The charities that this script uses (in effective_charities.csv) are all recommended by one or more organisations associated with effective altruism (although in some cases the lists only recommend targeting a particular part of the charity's work) [and see comment below].
 
