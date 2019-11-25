@@ -1,4 +1,6 @@
-# Charity seeding experiment code and process
+# Pull data from Justgiving on fundraisers/donations to 'effective charities'
+
+(Working on adapting this to remove mention of experiments ... but maybe this is too much work)
 
 ## How do I make the code run?
 
@@ -33,7 +35,7 @@ The charities that this script uses (in effective_charities.csv) are all recomme
 
 *[Note, 4 Aug 2018: ATM both lists seem to include the international megacharities]*
 
-###Created:
+### Created:
 A table of currently live (not yet expired) JG fundraising **pages** is created in
 ```
 {data\just_giving_data_snapshots\fundraisers}
@@ -52,23 +54,20 @@ These files are created as a record of the state of the full sample of pages. Th
 
 * for transparency - this data can be published as a way of allowing our entire process to be visible.
 
-###Updated:
+### Updated:
 **data_pulls.csv** is updated after every pull with the date and the file paths of the 2 files created (fundraisers and donations). The most recent files referenced in this table are used to update the other files.
 
-**experimental_pages.csv** contains the page data from all of the fundraising pages that have been selected for the experiment, both the treatment(s) and control pages.
+**experimental_pages.csv** contains the page data from all of the fundraising pages that have been selected
 
-**donations\_to\_experimental\_pages.csv** (donations_to_experimental_pages.csv) contains all of the donations data for the pages in the experimental_pages.csv file. This will be the main source of data for testing the hypotheses.
+**donations\_to\_experimental\_pages.csv** (donations_to_experimental_pages.csv) contains all of the donations data for the pages in the experimental_pages.csv file. 
 
 **treatments.csv** contains a list of pages that have been or should be treated. There will be a link to the page and a column in which the additional donation can be filled in.
 
-[@DR: Clarify---who will fill this in? In the last proposal, in Treatment_High we would donate twice the average previous donation, rounded to the nearest £10, and in  Treatment_Low half this amount, rounded to the nearest £5.]
 
 ## How do I make it run?
 =======
 
-## Expected experimental process
 
-####Every 1-3 days:
 1. Run the main.R script
 	+ This will download all the required data and split new pages (pages that have received at least one donation but are not yet part of the experiment) into treatment and control.
 	+ Treatment and control are determined by the last digit (seconds) of the time of the first donations. Even = Control. Odd = Treatment.
